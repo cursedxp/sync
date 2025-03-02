@@ -1,12 +1,14 @@
 import { useField } from "formik"
 import { HiCheck } from "react-icons/hi2"
+import React from "react"
+
 interface CheckBoxProps {
     name: string
     children?: React.ReactNode
     className?: string
 }
 
-const CheckBox:React.FC<CheckBoxProps> = ({ name, children, className }) => {
+const CheckBox:React.FC<CheckBoxProps> = React.memo(({ name, children, className }) => {
     const [field, meta, helpers] = useField(name)
    
     return (
@@ -31,5 +33,7 @@ const CheckBox:React.FC<CheckBoxProps> = ({ name, children, className }) => {
             ) : null}
         </div>
     )
-}
+})
+
+CheckBox.displayName = "CheckBox"
 export default CheckBox

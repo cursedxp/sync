@@ -1,13 +1,17 @@
 "use client"
+import Link from "next/link"
 import {Formik, Form} from "formik"
 import * as Yup from "yup"
-
-
-import Link from "next/link"
+import PasswordStrengthMeter from "@/app/components/common/PasswordStrengthMeter/PasswordStrengthMeter"
 import TextField from "@/app/components/common/TextField/TextField"
 import CheckBox from "@/app/components/common/CheckBox/CheckBox"
 
 export default function RegisterPage() {
+
+
+
+
+
     return (
         <div className="w-screen h-screen flex justify-center items-center">
             <div className="max-w-xl w-full">
@@ -24,7 +28,7 @@ export default function RegisterPage() {
                     }}
                     validationSchema={Yup.object({
                         email: Yup.string().email("Invalid email address").required("Email is required"),
-                        password: Yup.string().min(8, "Password must be at least 8 characters").required("Password is required"),
+                        password: Yup.string().min(8, "Choose a password with at least 8 characters.").required("Password is required"),
                         terms: Yup.boolean().oneOf([true], "Accept the Terms and Conditions and Privacy Policy to continue").required("Accept the Terms and Conditions and Privacy Policy to continue"),
                     })}
                     onSubmit={(values, { setSubmitting }) => {
@@ -32,10 +36,11 @@ export default function RegisterPage() {
                         setSubmitting(false)
                     }}
                 >
-                    {({ isSubmitting }) => (
+                    {({ isSubmitting,values }) => (
                         <Form>
                             <TextField label="Email address" name="email" type="email" placeholder="you@example.com" />
                             <TextField label="Password" name="password" type="password" placeholder="" />
+                            <PasswordStrengthMeter password={values.password} />
                             <CheckBox  name="terms" >
                                 <p>By ticking this box you accept the <Link href="/terms" className="underline">Terms and Conditions</Link> and acknowledge that you have read and understood the <Link href="/privacy" className="underline">Privacy Policy</Link></p>
                             </CheckBox>
