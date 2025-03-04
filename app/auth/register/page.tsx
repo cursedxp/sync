@@ -9,41 +9,41 @@ import Select from "@/app/components/common/Select/Select";
 
 export default function RegisterPage() {
   const countries = [
-    { value: "AT", label: "Austria" },
-    { value: "BE", label: "Belgium" },
-    { value: "BR", label: "Brazil" },
-    { value: "BG", label: "Bulgaria" },
-    { value: "CL", label: "Chile" },
-    { value: "CO", label: "Colombia" },
-    { value: "CY", label: "Cyprus" },
-    { value: "CZ", label: "Czech Republic" },
-    { value: "DK", label: "Denmark" },
-    { value: "EE", label: "Estonia" },
-    { value: "FI", label: "Finland" },
-    { value: "FR", label: "France" },
-    { value: "DE", label: "Germany" },
-    { value: "GR", label: "Greece" },
-    { value: "HU", label: "Hungary" },
-    { value: "IE", label: "Ireland" },
-    { value: "IT", label: "Italy" },
-    { value: "LV", label: "Latvia" },
-    { value: "LT", label: "Lithuania" },
-    { value: "LU", label: "Luxemburg" },
-    { value: "MT", label: "Malta" },
-    { value: "MX", label: "Mexico" },
-    { value: "NL", label: "Netherlands" },
-    { value: "NO", label: "Norway" },
-    { value: "PE", label: "Peru" },
-    { value: "PL", label: "Poland" },
-    { value: "PT", label: "Portugal" },
-    { value: "RO", label: "Romania" },
-    { value: "SK", label: "Slovakia" },
-    { value: "SI", label: "Slovenia" },
-    { value: "ES", label: "Spain" },
-    { value: "SE", label: "Sweden" },
-    { value: "CH", label: "Switzerland" },
-    { value: "GB", label: "United Kingdom" },
-    { value: "US", label: "United States" },
+    { value: "at", label: "Austria" },
+    { value: "be", label: "Belgium" },
+    { value: "br", label: "Brazil" },
+    { value: "bg", label: "Bulgaria" },
+    { value: "cl", label: "Chile" },
+    { value: "co", label: "Colombia" },
+    { value: "cy", label: "Cyprus" },
+    { value: "cz", label: "Czech Republic" },
+    { value: "dk", label: "Denmark" },
+    { value: "ee", label: "Estonia" },
+    { value: "fi", label: "Finland" },
+    { value: "fr", label: "France" },
+    { value: "de", label: "Germany" },
+    { value: "gr", label: "Greece" },
+    { value: "hu", label: "Hungary" },
+    { value: "ie", label: "Ireland" },
+    { value: "it", label: "Italy" },
+    { value: "lv", label: "Latvia" },
+    { value: "lt", label: "Lithuania" },
+    { value: "lu", label: "Luxemburg" },
+    { value: "mt", label: "Malta" },
+    { value: "mx", label: "Mexico" },
+    { value: "nl", label: "Netherlands" },
+    { value: "no", label: "Norway" },
+    { value: "pe", label: "Peru" },
+    { value: "pl", label: "Poland" },
+    { value: "pt", label: "Portugal" },
+    { value: "ro", label: "Romania" },
+    { value: "sk", label: "Slovakia" },
+    { value: "si", label: "Slovenia" },
+    { value: "es", label: "Spain" },
+    { value: "se", label: "Sweden" },
+    { value: "ch", label: "Switzerland" },
+    { value: "gb", label: "United Kingdom" },
+    { value: "us", label: "United States" },
   ];
 
   return (
@@ -64,6 +64,7 @@ export default function RegisterPage() {
             password: "",
             terms: false,
             news: false,
+            country: "at",
           }}
           validationSchema={Yup.object({
             email: Yup.string()
@@ -86,7 +87,7 @@ export default function RegisterPage() {
             setSubmitting(false);
           }}
         >
-          {({ isSubmitting, values }) => (
+          {({ isSubmitting, values, setFieldValue }) => (
             <Form>
               <TextField
                 label="Email address"
@@ -102,11 +103,12 @@ export default function RegisterPage() {
               />
               <PasswordStrengthMeter password={values.password} />
               <Select
-                name=""
-                value=""
-                label=""
+                name="country"
+                label="Country of your business"
                 options={countries}
-                onChange={() => {}}
+                value={values.country}
+                onChange={(value) => setFieldValue("country", value)}
+                showFlag={true}
               />
               <CheckBox name="terms">
                 <p>
