@@ -7,6 +7,7 @@ import TextField from "@/app/components/common/TextField/TextField";
 import CheckBox from "@/app/components/common/CheckBox/CheckBox";
 import Select from "@/app/components/common/Select/Select";
 
+
 export default function RegisterPage() {
   const countries = [
     { value: "at", label: "Austria" },
@@ -132,9 +133,9 @@ export default function RegisterPage() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full py-3 px-4 rounded-xl bg-blue-500 text-white"
+                className="w-full py-3 px-4 rounded-xl bg-blue-500 text-white font-semibold hover:bg-blue-600 transition-colors duration-300"
               >
-                {isSubmitting ? "Submitting..." : "Register"}
+                {isSubmitting ? "Submitting..." : "Next"}
               </button>
             </Form>
           )}
