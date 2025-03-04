@@ -8,7 +8,7 @@ interface CheckBoxProps {
     className?: string
 }
 
-const CheckBox:React.FC<CheckBoxProps> = React.memo(({ name, children, className }) => {
+const CheckBox:React.FC<CheckBoxProps> = ({ name, children, className }) => {
     const [field, meta, helpers] = useField(name)
    
     return (
@@ -33,7 +33,6 @@ const CheckBox:React.FC<CheckBoxProps> = React.memo(({ name, children, className
             ) : null}
         </div>
     )
-})
+}
 
-CheckBox.displayName = "CheckBox"
 export default CheckBox
