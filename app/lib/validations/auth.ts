@@ -1,5 +1,6 @@
 import { z } from "zod"
 
+//Initial register schema
 export const initialRegisterSchema = z.object({
   email: z
     .string()
@@ -24,6 +25,17 @@ export const initialRegisterSchema = z.object({
     .default(false)
 })
 
+//Login schema
+export const loginSchema = z.object({
+  email: z
+    .string()
+    .min(1, "Email is required")
+    .email("Invalid email address"),
+  password: z
+    .string()
+    .min(8, "Password must be at least 8 characters long"),
+})
+//Profile completion schema
 export const profileCompletionSchema = z.object({
   companyName: z
     .string()
