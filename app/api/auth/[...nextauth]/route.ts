@@ -11,7 +11,10 @@ const authOptions: AuthOptions = {
     adapter: PrismaAdapter(prisma) as Adapter,
     //2-Session
     session: {
-        strategy:"jwt"
+        strategy:"jwt",
+        maxAge: 30 * 24 * 60 * 60, //30 days
+        updateAge: 24 * 60 * 60, //24 hours
+        
     },
     //3-Pages
     pages: {
