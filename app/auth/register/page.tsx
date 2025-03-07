@@ -6,8 +6,10 @@ import PasswordStrengthMeter from "@/app/components/common/PasswordStrengthMeter
 import TextField from "@/app/components/common/TextField/TextField";
 import CheckBox from "@/app/components/common/CheckBox/CheckBox";
 import Select from "@/app/components/common/Select/Select";
+import { UseAuth } from "@/app/hooks/useAuth";
 
 export default function RegisterPage() {
+  const { register, isLoading, error, validationErrors } = UseAuth();
   const countries = [
     { value: "at", label: "Austria" },
     { value: "be", label: "Belgium" },
@@ -51,7 +53,7 @@ export default function RegisterPage() {
       <h1 className="text-4xl font-bold my-4">Register</h1>
       <div className="mb-4">
         <p>
-          Already have an account?{" "}
+          Already have an account?
           <Link href="/auth/login" className="font-semibold underline">
             Log in
           </Link>
@@ -62,7 +64,7 @@ export default function RegisterPage() {
           email: "",
           password: "",
           terms: false,
-          news: false,
+          newsLetterSubscription: false,
           country: "at",
         }}
         validationSchema={Yup.object({
@@ -81,12 +83,21 @@ export default function RegisterPage() {
               "Accept the Terms and Conditions and Privacy Policy to continue"
             ),
         })}
-        onSubmit={(values, { setSubmitting }) => {
-          console.log(values);
-          setSubmitting(false);
+        onSubmit={async (values) => {
+          try {
+            await register({
+              email: values.email,
+              password: values.password,
+              countryOfBusiness: values.country,
+              acceptTerms: values.terms,
+              newsLetterSubscription: values.newsLetterSubscription,
+            });
+          } catch (error) {
+            console.error("Registration error:", error);
+          }
         }}
       >
-        {({ isSubmitting, values, setFieldValue }) => (
+        {({ values, setFieldValue }) => (
           <Form>
             <TextField
               label="Email address"
@@ -121,7 +132,7 @@ export default function RegisterPage() {
                 </Link>
               </p>
             </CheckBox>
-            <CheckBox name="news">
+            <CheckBox name="newsLetterSubscription">
               <p>
                 (Optional) We will occasionally contact you with our latest news
                 and offers. You can unsubscribe at any time. By ticking this box
@@ -130,11 +141,27 @@ export default function RegisterPage() {
             </CheckBox>
             <button
               type="submit"
-              disabled={isSubmitting}
-              className="w-full py-3.5 px-4 rounded-xl bg-blue-500 text-white font-semibold hover:bg-blue-600 transition-colors duration-300"
+              disabled={isLoading}
+              className="w-full py-3.5 px-4 rounded-xl bg-blue-500 text-white font-semibold hover:bg-blue-600 transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isSubmitting ? "Submitting..." : "Next"}
+              {isLoading ? "Creating your account..." : "Next"}
             </button>
+            {error && (
+              <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+                <p className="text-red-600">{error}</p>
+              </div>
+            )}
+            {validationErrors && (
+              <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+                <ul className="list-disc list-inside">
+                  {Object.entries(validationErrors).map(([field, errors]) => (
+                    <li key={field} className="text-red-600">
+                      {field}: {errors.join(", ")}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </Form>
         )}
       </Formik>
