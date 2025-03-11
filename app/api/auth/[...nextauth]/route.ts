@@ -47,6 +47,9 @@ const authOptions: AuthOptions = {
         if (!passwordsMatch) {
           throw new Error("Invalid password");
         }
+        if (!user.emailVerified) {
+          throw new Error("Please verify your email before logging in");
+        }
         return {
           id: user.id,
           email: user.email,
