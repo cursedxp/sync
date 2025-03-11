@@ -2,61 +2,79 @@ import { NextResponse } from "next/server";
 import { initialRegisterSchema } from "@/app/lib/validations/auth";
 import { prisma } from "@/app/lib/prisma";
 import bcrypt from "bcrypt";
+import { createVerificationToken } from "@/app/lib/emailAuth";
+import { sendVerificationEmail } from "@/app/lib/email";
 
 export async function POST(request: Request) {
-    try {
-        const body = await request.json();
-        
+  try {
+    const body = await request.json();
+
     //1-Validate request body
     const validatedData = initialRegisterSchema.safeParse(body);
 
-    if(!validatedData.success) {
-        return NextResponse.json({error:"Validation error",
-            issues: validatedData.error.flatten().fieldErrors,
-        }, {status:400})
+    if (!validatedData.success) {
+      return NextResponse.json(
+        {
+          error: "Validation error",
+          issues: validatedData.error.flatten().fieldErrors,
+        },
+        { status: 400 }
+      );
     }
 
     //2-Check if user already exists
     const existingUser = await prisma.user.findUnique({
-        where: {
-            email: validatedData.data.email
-        }
+      where: {
+        email: validatedData.data.email,
+      },
     });
 
-    if(existingUser) {
-        return NextResponse.json({error:"User already exists"}, {status:400})
+    if (existingUser) {
+      return NextResponse.json(
+        { error: "User already exists" },
+        { status: 400 }
+      );
     }
 
     //3-Hash password
-    const hashedPassword = await bcrypt.hash(validatedData.data.password, 10)
+    const hashedPassword = await bcrypt.hash(validatedData.data.password, 10);
 
     //4-Create user
-    const user = await prisma.user.create({data:{
+    const user = await prisma.user.create({
+      data: {
         email: validatedData.data.email,
         password: hashedPassword,
         countryOfBusiness: validatedData.data.countryOfBusiness,
         acceptTerms: validatedData.data.acceptTerms,
         newsletterSubscription: validatedData.data.newsletterSubscription,
         isProfileCompleted: false,
-    }})
+      },
+    });
 
-    //5-Clean up response
+    //5-Create verification token and send email
+    const verificationToken = await createVerificationToken(user.email);
+    await sendVerificationEmail({
+      email: user.email,
+      token: verificationToken,
+    });
+
+    //6-Clean up response
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const {password, ...userWithoutPassword} = user;
+    const { password, ...userWithoutPassword } = user;
 
     return NextResponse.json(
-        {
-            message: "Registration successful",
-            user: userWithoutPassword
-        },
-        { status: 201 }
+      {
+        message:
+          "Registration successful. Please check your email to verify your account.",
+        user: userWithoutPassword,
+      },
+      { status: 201 }
     );
-} catch (error) {
+  } catch (error) {
     console.error("Registration error:", error);
     return NextResponse.json(
-        { error: "Internal server error" },
-        { status: 500 }
+      { error: "Internal server error" },
+      { status: 500 }
     );
-}
-    
+  }
 }
