@@ -71,9 +71,7 @@ export default function RegisterPage() {
           email: Yup.string()
             .email("Invalid email address")
             .required("Email is required"),
-          password: Yup.string()
-            .min(8, "Choose a password with at least 8 characters.")
-            .required("Password is required"),
+          password: Yup.string().required("Password is required"),
           terms: Yup.boolean()
             .oneOf(
               [true],

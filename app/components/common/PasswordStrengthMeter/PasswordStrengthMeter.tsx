@@ -29,10 +29,7 @@ const PasswordStrengthMeter: React.FC<PasswordStrengthMeterProps> = React.memo(
             <span className="text-orange-500 font-semibold">
               This password is moderately strong.
             </span>
-            <span>
-              {" "}
-              Try to include a mix of letters, numbers, and special characters.
-            </span>
+            <span> Add letters, numbers, and special characters.</span>
           </>
         );
       }
@@ -42,10 +39,7 @@ const PasswordStrengthMeter: React.FC<PasswordStrengthMeterProps> = React.memo(
             <span className="text-orange-500 font-semibold">
               This password could be stronger.
             </span>
-            <span>
-              {" "}
-              Try to include a mix of letters, numbers, and special characters.
-            </span>
+            <span> Add letters, numbers, and special characters.</span>
           </>
         );
       }
