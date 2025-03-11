@@ -37,6 +37,7 @@ model Session {
 model User {
   id                     String    @id @default(auto()) @map("_id") @db.ObjectId
   email                  String    @unique
+  emailVerified         DateTime?
   password               String?
   countryOfBusiness      String
   acceptTerms            Boolean   @default(false)
