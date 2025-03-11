@@ -47,7 +47,7 @@ export function UseAuth() {
       }
 
       setIsSuccess(true);
-      router.push("/auth/verify-email");
+      router.push("/auth/check-email");
       return data;
     } catch (error) {
       setError(error instanceof Error ? error.message : "An error occurred");
