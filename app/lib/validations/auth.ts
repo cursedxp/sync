@@ -1,40 +1,30 @@
-import { z } from "zod"
+import { z } from "zod";
+import zxcvbn from "zxcvbn";
 
 //Initial register schema
 export const initialRegisterSchema = z.object({
-  email: z
-    .string()
-    .min(1, "Email is required")
-    .email("Invalid email address"),
-  password: z
-    .string()
-    .min(8, "Password must be at least 8 characters long")
-    .regex(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-      "Password must contain at least one uppercase letter, one lowercase letter, one number and one special character"
-    ),
-  countryOfBusiness: z
-    .string()
-    .min(2, "Business country is required"),
+  email: z.string().min(1, "Email is required").email("Invalid email address"),
+  password: z.string().refine(
+    (val) => {
+      const result = zxcvbn(val);
+      return result.score >= 3;
+    },
+    {
+      message: "Password is too weak",
+    }
+  ),
+  countryOfBusiness: z.string().min(2, "Business country is required"),
   acceptTerms: z
     .boolean()
     .refine((val) => val === true, "Terms and conditions must be accepted"),
-  newsletterSubscription: z
-    .boolean()
-    .optional()
-    .default(false)
-})
+  newsletterSubscription: z.boolean().optional().default(false),
+});
 
 //Login schema
 export const loginSchema = z.object({
-  email: z
-    .string()
-    .min(1, "Email is required")
-    .email("Invalid email address"),
-  password: z
-    .string()
-    .min(8, "Password must be at least 8 characters long"),
-})
+  email: z.string().min(1, "Email is required").email("Invalid email address"),
+  password: z.string().min(8, "Password must be at least 8 characters long"),
+});
 //Profile completion schema
 export const profileCompletionSchema = z.object({
   companyName: z
@@ -53,13 +43,7 @@ export const profileCompletionSchema = z.object({
     .string()
     .max(100, "Address must be at most 100 characters long")
     .optional(),
-  city: z
-    .string()
-    .min(2, "City must be at least 2 characters long"),
-  state: z
-    .string()
-    .min(2, "State must be at least 2 characters long"),
-  zipCode: z
-    .string()
-    .min(5, "Postal code must be at least 5 characters long"),
-})
+  city: z.string().min(2, "City must be at least 2 characters long"),
+  state: z.string().min(2, "State must be at least 2 characters long"),
+  zipCode: z.string().min(5, "Postal code must be at least 5 characters long"),
+});
