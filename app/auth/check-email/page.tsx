@@ -24,7 +24,7 @@ export default function CheckEmailPage() {
             </p>
             <Link
               href="/auth/login"
-              className="w-full inline-flex justify-center py-3.5 px-4 rounded-xl bg-blue-500 text-white font-semibold hover:bg-blue-600 transition-colors duration-300"
+              className="inline-flex justify-center py-3.5 px-16 rounded-xl bg-blue-500 text-white font-semibold hover:bg-blue-600 transition-colors duration-300"
             >
               Try logging in
             </Link>

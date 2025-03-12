@@ -6,7 +6,7 @@ import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-
+import Button from "@/app/components/common/Button/button";
 export default function LoginPage() {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
@@ -62,13 +62,9 @@ export default function LoginPage() {
             >
               Forgot your password?
             </Link>
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="w-full py-3.5 px-4 rounded-xl bg-blue-500 text-white font-semibold hover:bg-blue-600 transition-colors duration-300"
-            >
+            <Button type="submit" disabled={isSubmitting}>
               {isSubmitting ? "Logging in..." : "Login"}
-            </button>
+            </Button>
             {error && (
               <div className="py-4">
                 <p className="text-red-600 text-center">{error}</p>

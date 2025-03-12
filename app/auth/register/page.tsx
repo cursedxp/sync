@@ -7,7 +7,7 @@ import TextField from "@/app/components/common/TextField/TextField";
 import CheckBox from "@/app/components/common/CheckBox/CheckBox";
 import Select from "@/app/components/common/Select/Select";
 import { UseAuth } from "@/app/hooks/useAuth";
-
+import Button from "@/app/components/common/Button/button";
 export default function RegisterPage() {
   const { register, isLoading, error, validationErrors } = UseAuth();
   const countries = [
@@ -137,13 +137,9 @@ export default function RegisterPage() {
                 you indicate that you do not want to be contacted.
               </p>
             </CheckBox>
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="w-full py-3.5 px-4 rounded-xl bg-blue-500 text-white font-semibold hover:bg-blue-600 transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
+            <Button type="submit" disabled={isLoading}>
               {isLoading ? "Creating your account..." : "Next"}
-            </button>
+            </Button>
             {error && (
               <div className="py-4">
                 <p className="text-red-600 text-center">{error}</p>

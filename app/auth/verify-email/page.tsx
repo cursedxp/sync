@@ -108,13 +108,13 @@ export default function VerifyEmailPage() {
             <div className="pt-4 space-y-3">
               <Link
                 href="/auth/login"
-                className="w-full inline-flex justify-center py-3.5 px-4 rounded-xl bg-blue-500 text-white font-semibold hover:bg-blue-600 transition-colors duration-300"
+                className="inline-flex justify-center py-3.5 px-16 rounded-xl bg-blue-500 text-white font-semibold hover:bg-blue-600 transition-colors duration-300"
               >
                 Go to Login
               </Link>
               <Link
                 href="/auth/register"
-                className="w-full inline-flex justify-center py-3.5 px-4 rounded-xl border border-blue-500 text-blue-500 font-semibold hover:bg-blue-50 transition-colors duration-300"
+                className="inline-flex justify-center py-3.5 px-16 rounded-xl border border-blue-500 text-blue-500 font-semibold hover:bg-blue-50 transition-colors duration-300"
               >
                 Register a new account
               </Link>
