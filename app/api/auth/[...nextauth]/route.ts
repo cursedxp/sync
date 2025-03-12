@@ -6,7 +6,7 @@ import { prisma } from "@/app/lib/prisma";
 import bcrypt from "bcryptjs";
 
 //Auth options
-const authOptions: AuthOptions = {
+export const authOptions: AuthOptions = {
   //1-Adapter
   adapter: PrismaAdapter(prisma) as Adapter,
   //2-Session
