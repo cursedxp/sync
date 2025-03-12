@@ -145,8 +145,8 @@ export default function RegisterPage() {
               {isLoading ? "Creating your account..." : "Next"}
             </button>
             {error && (
-              <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
-                <p className="text-red-600">{error}</p>
+              <div className="py-4">
+                <p className="text-red-600 text-center">{error}</p>
               </div>
             )}
             {validationErrors && (

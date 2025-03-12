@@ -5,10 +5,11 @@ import TextField from "@/app/components/common/TextField/TextField";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function LoginPage() {
   const router = useRouter();
-
+  const [error, setError] = useState<string | null>(null);
   return (
     <>
       <h1 className="text-4xl font-bold my-4">Login</h1>
@@ -35,9 +36,9 @@ export default function LoginPage() {
           });
 
           if (result?.error) {
-            console.error(result.error);
+            setError(result.error);
           } else {
-            router.push("/client");
+            router.push("/workspace");
           }
         }}
       >
@@ -68,6 +69,11 @@ export default function LoginPage() {
             >
               {isSubmitting ? "Logging in..." : "Login"}
             </button>
+            {error && (
+              <div className="py-4">
+                <p className="text-red-600 text-center">{error}</p>
+              </div>
+            )}
           </Form>
         )}
       </Formik>
