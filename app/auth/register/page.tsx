@@ -151,7 +151,7 @@ export default function RegisterPage() {
             )}
             {validationErrors && (
               <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
-                <ul className="list-disc list-inside">
+                <ul>
                   {Object.entries(validationErrors).map(([field, errors]) => (
                     <li key={field} className="text-red-600">
                       {field}: {errors.join(", ")}
