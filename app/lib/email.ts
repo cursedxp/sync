@@ -10,9 +10,9 @@ interface EmailData {
 export async function sendVerificationEmail({ email, token }: EmailData) {
   try {
     const confirmationUrl = `${process.env.NEXTAUTH_URL}/auth/verify-email?token=${token}`;
-    await resend.emails.send({
+    const response = await resend.emails.send({
       //TODO: Change to the actual email address
-      from: "noreply@insync.com",
+      from: "onboarding@resend.dev",
       to: email,
       subject: "Verify your email",
       html: `
@@ -22,6 +22,13 @@ export async function sendVerificationEmail({ email, token }: EmailData) {
         <p>If you didn't request this email, you can safely ignore it.</p>
       `,
     });
+    if (response.error) {
+      console.error(
+        "Error sending verification email:",
+        response.error.message
+      );
+      throw new Error("Failed to send verification email");
+    }
   } catch (error) {
     console.error("Error sending verification email:", error);
     throw new Error("Failed to send verification email");
