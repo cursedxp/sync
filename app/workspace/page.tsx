@@ -1,23 +1,28 @@
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { redirect } from "next/navigation";
-import LogoutButton from "@/app/workspace/LogoutButton";
+"use client";
 
-export default async function Workspace() {
-  const session = await getServerSession(authOptions);
+import { signOut, useSession } from "next-auth/react";
+import Button from "@/app/components/common/Button/button";
+import { useRouter } from "next/navigation";
 
-  if (!session?.user) {
-    redirect("/auth/login");
-  }
+export default function Workspace() {
+  const session = useSession();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    await signOut();
+    router.push("/auth/login");
+  };
 
   return (
     <main className="container mx-auto px-4 py-8">
       <div className="rounded-lg border bg-card p-8">
         <h1 className="text-2xl font-bold mb-4">Welcome to your workspace</h1>
         <p className="text-muted-foreground">
-          You are logged in as {session.user.email}
+          You are logged in as {session?.data?.user?.email}
         </p>
-        <LogoutButton />
+        <Button onClick={handleLogout} className="max-w-48">
+          Logout
+        </Button>
       </div>
     </main>
   );
