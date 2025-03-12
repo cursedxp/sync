@@ -6,7 +6,7 @@ import { BiMailSend } from "react-icons/bi";
 export default function CheckEmailPage() {
   return (
     <>
-      <div className="bg-white rounded-xl shadow-sm p-6 mb-4">
+      <div className="p-6 mb-4">
         <div className="text-center space-y-4">
           <div className="flex justify-center">
             <BiMailSend className="h-16 w-16 text-blue-500" />
