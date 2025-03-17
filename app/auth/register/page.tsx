@@ -2,61 +2,21 @@
 import Link from "next/link";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import PasswordStrengthMeter from "@/app/components/common/PasswordStrengthMeter/PasswordStrengthMeter";
-import TextField from "@/app/components/common/TextField/TextField";
-import CheckBox from "@/app/components/common/CheckBox/CheckBox";
-import Select from "@/app/components/common/Select/Select";
 import { UseAuth } from "@/app/hooks/useAuth";
+import StepOne from "@/app/components/forms/registration/stepOne";
+import StepTwo from "@/app/components/forms/registration/stepTwo";
 import Button from "@/app/components/common/Button/button";
+import { useState } from "react";
 export default function RegisterPage() {
   const { register, isLoading, error, validationErrors } = UseAuth();
-  const countries = [
-    { value: "at", label: "Austria" },
-    { value: "be", label: "Belgium" },
-    { value: "br", label: "Brazil" },
-    { value: "bg", label: "Bulgaria" },
-    { value: "cl", label: "Chile" },
-    { value: "co", label: "Colombia" },
-    { value: "cy", label: "Cyprus" },
-    { value: "cz", label: "Czech Republic" },
-    { value: "dk", label: "Denmark" },
-    { value: "ee", label: "Estonia" },
-    { value: "fi", label: "Finland" },
-    { value: "fr", label: "France" },
-    { value: "de", label: "Germany" },
-    { value: "gr", label: "Greece" },
-    { value: "hu", label: "Hungary" },
-    { value: "ie", label: "Ireland" },
-    { value: "it", label: "Italy" },
-    { value: "lv", label: "Latvia" },
-    { value: "lt", label: "Lithuania" },
-    { value: "lu", label: "Luxemburg" },
-    { value: "mt", label: "Malta" },
-    { value: "mx", label: "Mexico" },
-    { value: "nl", label: "Netherlands" },
-    { value: "no", label: "Norway" },
-    { value: "pe", label: "Peru" },
-    { value: "pl", label: "Poland" },
-    { value: "pt", label: "Portugal" },
-    { value: "ro", label: "Romania" },
-    { value: "sk", label: "Slovakia" },
-    { value: "si", label: "Slovenia" },
-    { value: "es", label: "Spain" },
-    { value: "se", label: "Sweden" },
-    { value: "ch", label: "Switzerland" },
-    { value: "gb", label: "United Kingdom" },
-    { value: "us", label: "United States" },
-  ];
+  const [step, setStep] = useState(1);
 
   return (
     <>
-      <h1 className="text-4xl font-bold my-4">Register</h1>
-      <div className="mb-4">
-        <p>
-          Already have an account?
-          <Link href="/auth/login" className="font-semibold underline">
-            Log in
-          </Link>
+      <h1 className="text-4xl font-bold mb-2">Register</h1>
+      <div className="mb-10">
+        <p className="text-sm text-gray-500">
+          Sign up and get 30 days free trial
         </p>
       </div>
       <Formik
@@ -66,6 +26,12 @@ export default function RegisterPage() {
           terms: false,
           newsLetterSubscription: false,
           country: "at",
+          companyName: "",
+          phoneNumber: "",
+          addressLine1: "",
+          addressLine2: "",
+          city: "",
+          region: "",
         }}
         validationSchema={Yup.object({
           email: Yup.string()
@@ -80,6 +46,14 @@ export default function RegisterPage() {
             .required(
               "Accept the Terms and Conditions and Privacy Policy to continue"
             ),
+          newsLetterSubscription: Yup.boolean().optional(),
+          companyName: Yup.string().required("Company Name is required"),
+          phoneNumber: Yup.string().required("Phone Number is required"),
+          addressLine1: Yup.string().required("Address Line 1 is required"),
+          addressLine2: Yup.string().optional(),
+          city: Yup.string().required("City is required"),
+          region: Yup.string().optional(),
+          zipCode: Yup.string().optional(),
         })}
         onSubmit={async (values) => {
           try {
@@ -97,49 +71,38 @@ export default function RegisterPage() {
       >
         {({ values, setFieldValue }) => (
           <Form>
-            <TextField
-              label="Email address"
-              name="email"
-              type="email"
-              placeholder="you@example.com"
-            />
-            <TextField
-              label="Password"
-              name="password"
-              type="password"
-              placeholder=""
-            />
-            <PasswordStrengthMeter password={values.password} />
-            <Select
-              name="country"
-              label="Country of your business"
-              options={countries}
-              value={values.country}
-              onChange={(value) => setFieldValue("country", value)}
-              showFlag={true}
-            />
-            <CheckBox name="terms">
-              <p>
-                By ticking this box you accept the{" "}
-                <Link href="/terms" className="underline">
-                  Terms and Conditions
-                </Link>{" "}
-                and acknowledge that you have read and understood the{" "}
-                <Link href="/privacy" className="underline">
-                  Privacy Policy
-                </Link>
-              </p>
-            </CheckBox>
-            <CheckBox name="newsLetterSubscription">
-              <p>
-                (Optional) We will occasionally contact you with our latest news
-                and offers. You can unsubscribe at any time. By ticking this box
-                you indicate that you do not want to be contacted.
-              </p>
-            </CheckBox>
-            <Button type="submit" disabled={isLoading}>
-              {isLoading ? "Creating your account..." : "Next"}
-            </Button>
+            {step === 1 && (
+              <StepOne values={values} setFieldValue={setFieldValue} />
+            )}
+
+            {step === 2 && <StepTwo />}
+            {step === 1 && (
+              <Button
+                onClick={() => {
+                  if (
+                    values.email &&
+                    values.password &&
+                    values.country &&
+                    values.terms
+                  ) {
+                    setStep(2);
+                  }
+                }}
+              >
+                Next
+              </Button>
+            )}
+            {step === 2 && (
+              <Button type="submit">
+                {isLoading ? "Registering..." : "Register"}
+              </Button>
+            )}
+            <p className="text-center mt-4">
+              Already have an account?
+              <Link href="/auth/login" className="font-semibold underline ">
+                Log in
+              </Link>
+            </p>
             {error && (
               <div className="py-4">
                 <p className="text-red-600 text-center">{error}</p>
