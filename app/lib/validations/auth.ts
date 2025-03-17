@@ -61,3 +61,7 @@ export const profileCompletionSchema = z.object({
   state: z.string().min(2, "State must be at least 2 characters long"),
   zipCode: z.string().min(5, "Postal code must be at least 5 characters long"),
 });
+
+export const resendVerificationSchema = z.object({
+  email: z.string().min(1, "Email is required").email("Invalid email address"),
+});

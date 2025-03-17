@@ -2,8 +2,57 @@
 
 import Link from "next/link";
 import { BiMailSend } from "react-icons/bi";
+import { useState } from "react";
+import { useSearchParams } from "next/navigation";
+import Button from "@/app/components/common/Button/button";
 
 export default function CheckEmailPage() {
+  const searchParams = useSearchParams();
+  const email = searchParams.get("email");
+  const [isResending, setIsResending] = useState(false);
+  const [resendStatus, setResendStatus] = useState<{
+    type: "success" | "error";
+    message: string;
+  } | null>(null);
+
+  const handleResendVerification = async () => {
+    if (!email) return;
+
+    try {
+      setIsResending(true);
+      setResendStatus(null);
+
+      const response = await fetch("/api/auth/resend-verification", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to resend verification email");
+      }
+
+      setResendStatus({
+        type: "success",
+        message: "Verification email sent successfully!",
+      });
+    } catch (error) {
+      setResendStatus({
+        type: "error",
+        message:
+          error instanceof Error
+            ? error.message
+            : "Failed to resend verification email",
+      });
+    } finally {
+      setIsResending(false);
+    }
+  };
+
   return (
     <>
       <div className="p-6 mb-4">
@@ -22,12 +71,33 @@ export default function CheckEmailPage() {
             <p className="text-sm text-gray-500">
               Did not receive the email? Check your spam folder or
             </p>
-            <Link
-              href="/auth/login"
-              className="inline-flex justify-center py-3.5 px-16 rounded-xl bg-blue-500 text-white font-semibold hover:bg-blue-600 transition-colors duration-300"
-            >
-              Try logging in
-            </Link>
+            {email ? (
+              <Button
+                onClick={handleResendVerification}
+                disabled={isResending}
+                className="w-full"
+              >
+                {isResending ? "Resending..." : "Resend verification email"}
+              </Button>
+            ) : (
+              <Link
+                href="/auth/login"
+                className="inline-flex justify-center py-3.5 px-16 rounded-xl bg-blue-500 text-white font-semibold hover:bg-blue-600 transition-colors duration-300"
+              >
+                Try logging in
+              </Link>
+            )}
+            {resendStatus && (
+              <div
+                className={`mt-4 p-4 rounded-lg ${
+                  resendStatus.type === "success"
+                    ? "bg-green-50 text-green-700 border border-green-200"
+                    : "bg-red-50 text-red-700 border border-red-200"
+                }`}
+              >
+                <p>{resendStatus.message}</p>
+              </div>
+            )}
           </div>
         </div>
       </div>
