@@ -4,9 +4,10 @@ import zxcvbn from "zxcvbn";
 
 interface PasswordStrengthMeterProps {
   password: string;
+  className?: string;
 }
 const PasswordStrengthMeter: React.FC<PasswordStrengthMeterProps> = React.memo(
-  ({ password }) => {
+  ({ password, className }) => {
     const calculatePasswordStrength = (password: string) => {
       const result = zxcvbn(password);
       if (password.length < 8) {
@@ -59,7 +60,7 @@ const PasswordStrengthMeter: React.FC<PasswordStrengthMeterProps> = React.memo(
     };
 
     return (
-      <>
+      <div className={className}>
         <div className="w-full bg-slate-300 h-1 rounded-full">
           <div
             className={`w-1/2 h-1 rounded-full ${
@@ -85,7 +86,7 @@ const PasswordStrengthMeter: React.FC<PasswordStrengthMeterProps> = React.memo(
         <p className="text-sm mt-2 mb-4">
           {calculatePasswordStrength(password)}
         </p>
-      </>
+      </div>
     );
   }
 );
