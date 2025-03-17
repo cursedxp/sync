@@ -28,10 +28,7 @@ export const completeRegistrationSchema = z.object({
   addressLine2: z.string().optional(),
   city: z.string().min(2, "City is required"),
   region: z.string().optional(),
-  zipCode: z
-    .string()
-    .regex(/^[A-Z0-9-\s]{3,10}$/i, "Invalid postal code format")
-    .optional(),
+  zipCode: z.string().optional(),
 });
 
 //Login schema
