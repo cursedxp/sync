@@ -3,6 +3,7 @@ import { prisma } from "@/app/lib/prisma";
 import { createVerificationToken } from "@/app/lib/emailAuth";
 import { sendVerificationEmail } from "@/app/lib/email";
 import { resendVerificationSchema } from "@/app/lib/validations/auth";
+import rateLimitEmail from "@/app/middlewares/rateLimit";
 
 export async function POST(request: Request) {
   try {
@@ -13,10 +14,21 @@ export async function POST(request: Request) {
     if (!validation.success)
       return NextResponse.json({ error: "Invalid request body", status: 400 });
 
+    const { email } = validation.data;
+
+    // Check rate limit
+    if (!rateLimitEmail(email)) {
+      return NextResponse.json({
+        error: "Too many verification requests. Please try again in 24 hours.",
+        status: 429,
+      });
+    }
+
     //Check if the user exists
     const user = await prisma.user.findUnique({
-      where: { email: validation.data.email },
+      where: { email },
     });
+
     //If the user does not exist, return a 404 error
     if (!user)
       return NextResponse.json({ error: "User not found", status: 404 });
@@ -29,12 +41,12 @@ export async function POST(request: Request) {
       });
 
     //Create a verification token
-    const token = await createVerificationToken(user.email);
+    const token = await createVerificationToken(email);
 
     //Send the verification email
     await sendVerificationEmail({
-      email: user.email,
-      token: token,
+      email,
+      token,
     });
 
     return NextResponse.json(

@@ -13,10 +13,30 @@ export async function GET(request: Request) {
 
     const payload = await verifyVerificationToken(token);
 
-    if (!payload) {
-      return NextResponse.json({ error: "Invalid token" }, { status: 400 });
+    if (!payload || !payload.email) {
+      return NextResponse.json(
+        { error: "Invalid or expired token" },
+        { status: 400 }
+      );
     }
 
+    // Check if user exists and isn't already verified
+    const user = await prisma.user.findUnique({
+      where: { email: payload.email as string },
+    });
+
+    if (!user) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    if (user.emailVerified) {
+      return NextResponse.json(
+        { error: "Email already verified" },
+        { status: 400 }
+      );
+    }
+
+    // Update user's email verification status
     await prisma.user.update({
       where: { email: payload.email as string },
       data: { emailVerified: new Date() },
@@ -27,9 +47,9 @@ export async function GET(request: Request) {
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error verifying verification token:", error);
+    console.error("Error verifying email:", error);
     return NextResponse.json(
-      { error: "Failed to verify verification token" },
+      { error: "Failed to verify email" },
       { status: 500 }
     );
   }
