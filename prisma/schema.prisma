@@ -50,7 +50,7 @@ model User {
   addressLine1          String?
   addressLine2          String?
   city                  String?
-  state                 String?
+  region                String?
   zipCode               String?
   
   createdAt            DateTime  @default(now())
