@@ -3,7 +3,7 @@ import { prisma } from "@/app/lib/prisma";
 import { createVerificationToken } from "@/app/lib/emailAuth";
 import { sendVerificationEmail } from "@/app/lib/email";
 import { resendVerificationSchema } from "@/app/lib/validations/auth";
-import rateLimitEmail from "@/app/middlewares/rateLimit";
+import rateLimitEmail from "@/app/middleware/rateLimit";
 
 export async function POST(request: Request) {
   try {
