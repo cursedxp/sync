@@ -20,6 +20,20 @@ export const initialRegisterSchema = z.object({
   newsletterSubscription: z.boolean().optional().default(false),
 });
 
+//Complete registration schema
+export const completeRegistrationSchema = z.object({
+  companyName: z.string().min(2, "Company name is required"),
+  phoneNumber: z.string().min(10, "Phone number is required"),
+  addressLine1: z.string().min(5, "Address is required"),
+  addressLine2: z.string().optional(),
+  city: z.string().min(2, "City is required"),
+  region: z.string().optional(),
+  zipCode: z
+    .string()
+    .regex(/^[A-Z0-9-\s]{3,10}$/i, "Invalid postal code format")
+    .optional(),
+});
+
 //Login schema
 export const loginSchema = z.object({
   email: z.string().min(1, "Email is required").email("Invalid email address"),
