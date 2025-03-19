@@ -7,12 +7,26 @@ import StepOne from "@/app/components/forms/registration/stepOne";
 import StepTwo from "@/app/components/forms/registration/stepTwo";
 import Button from "@/app/components/common/Button/button";
 import { useState } from "react";
+import { HiChevronLeft } from "react-icons/hi2";
+
 export default function RegisterPage() {
   const { register, isLoading, error, validationErrors } = UseAuth();
   const [step, setStep] = useState(1);
 
   return (
     <>
+      {step === 2 && (
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setStep(1)}
+            className="mb-6 rounded-full w-10 h-10 flex items-center justify-center border border-gray-600 hover:bg-gray-100 transition-colors"
+            aria-label="Go back to previous step"
+          >
+            <HiChevronLeft className="w-6 h-6" />
+          </button>
+          <p>Back</p>
+        </div>
+      )}
       <h1 className="text-4xl font-bold mb-2">Register</h1>
       <div className="mb-10">
         <p className="text-sm text-gray-500">
@@ -32,6 +46,7 @@ export default function RegisterPage() {
           addressLine2: "",
           city: "",
           region: "",
+          zipCode: "",
         }}
         validationSchema={Yup.object({
           email: Yup.string()
@@ -70,44 +85,46 @@ export default function RegisterPage() {
         }}
       >
         {({ values, setFieldValue }) => (
-          <Form>
+          <Form className="space-y-6">
             {step === 1 && (
               <StepOne values={values} setFieldValue={setFieldValue} />
             )}
 
-            {step === 2 && <StepTwo />}
-            {step === 1 && (
-              <Button
-                onClick={() => {
-                  if (
-                    values.email &&
-                    values.password &&
-                    values.country &&
-                    values.terms
-                  ) {
-                    setStep(2);
-                  }
-                }}
-              >
-                Next
-              </Button>
-            )}
             {step === 2 && (
-              <Button type="submit">
-                {isLoading ? "Registering..." : "Register"}
-              </Button>
+              <StepTwo values={values} setFieldValue={setFieldValue} />
             )}
+
+            <div className="flex gap-4">
+              {step === 1 && (
+                <Button
+                  type="button"
+                  onClick={() => setStep(2)}
+                  className="flex-1"
+                >
+                  Next
+                </Button>
+              )}
+
+              {step === 2 && (
+                <Button type="submit" className="flex-1">
+                  {isLoading ? "Registering..." : "Register"}
+                </Button>
+              )}
+            </div>
+
             <p className="text-center mt-4">
-              Already have an account?
-              <Link href="/auth/login" className="font-semibold underline ">
+              Already have an account?{" "}
+              <Link href="/auth/login" className="font-semibold underline">
                 Log in
               </Link>
             </p>
+
             {error && (
               <div className="py-4">
                 <p className="text-red-600 text-center">{error}</p>
               </div>
             )}
+
             {validationErrors && (
               <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
                 <ul>

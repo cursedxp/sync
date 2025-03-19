@@ -1,7 +1,6 @@
 export const countries = [
   { value: "at", label: "Austria", areaCode: "+43" },
   { value: "be", label: "Belgium", areaCode: "+32" },
-  { value: "br", label: "Brazil", areaCode: "+55" },
   { value: "bg", label: "Bulgaria", areaCode: "+359" },
   { value: "cl", label: "Chile", areaCode: "+56" },
   { value: "co", label: "Colombia", areaCode: "+57" },

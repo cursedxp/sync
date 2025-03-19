@@ -1,19 +1,33 @@
 import TextField from "@/app/components/common/TextField/TextField";
+import PhoneField from "@/app/components/common/phoneField/phoneFiled";
 
-export default function StepTwo() {
+interface StepTwoProps {
+  values: {
+    companyName: string;
+    phoneNumber: string;
+    addressLine1: string;
+    addressLine2: string;
+    city: string;
+    region: string;
+    zipCode: string;
+  };
+  setFieldValue: (field: string, value: string) => void;
+}
+
+export default function StepTwo({ values, setFieldValue }: StepTwoProps) {
   return (
-    <>
+    <div className="space-y-4">
       <TextField
         placeholder="Enter your company name"
         label="Company Name"
         name="companyName"
         type="text"
       />
-      <TextField
-        placeholder="Enter your phone number"
-        label="Phone Number"
+      <PhoneField
         name="phoneNumber"
-        type="text"
+        label="Phone Number"
+        setFieldValue={setFieldValue}
+        value={values.phoneNumber}
       />
       <TextField
         placeholder="Enter your address line 1"
@@ -45,6 +59,6 @@ export default function StepTwo() {
         name="zipCode"
         type="text"
       />
-    </>
+    </div>
   );
 }

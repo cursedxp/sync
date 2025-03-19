@@ -18,7 +18,7 @@ interface StepOneProps {
 
 export default function StepOne({ values, setFieldValue }: StepOneProps) {
   return (
-    <div className="mb-8">
+    <div className="space-y-4">
       <TextField
         label="Email address"
         name="email"
